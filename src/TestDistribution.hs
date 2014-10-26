@@ -1,5 +1,6 @@
 import Test.HUnit
 
 import TestRegex
+import TestCompile
 
-main = runTestTT testRegex
+main = runTestTT $ TestList [ testRegex, testCompile ]
