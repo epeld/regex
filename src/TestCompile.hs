@@ -5,7 +5,8 @@ import TestUtils
 import Compile
 
 testRegexCompiles = testCases
-    [ assertCompiles "a+",
+    [ assertCompiles "",
+      assertCompiles "a+",
       assertCompiles "a+b*",
       assertCompiles "xxy(a)+b*",
       assertCompiles "(xxy)*(a)+b*",

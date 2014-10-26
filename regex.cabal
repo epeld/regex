@@ -22,6 +22,6 @@ library
 
 executable testregex
     Main-Is:    TestDistribution.hs
-    Other-Modules: TestRegex, Regex
+    Other-Modules: TestRegex, Regex, TestCompile, Compile, TestUtils
     Build-Depends: HUnit, base
     hs-source-dirs: src
