@@ -15,11 +15,13 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  exposed-modules:  Regex, TestRegex
-  -- other-modules:       
-  build-depends:       base ==4.6.*, HUnit
+    exposed-modules:  Regex, TestRegex
+    -- other-modules:       
+    build-depends:       base ==4.6.*, HUnit
+    hs-source-dirs: src
 
 executable testregex
     Main-Is:    TestDistribution.hs
     Other-Modules: TestRegex, Regex
     Build-Depends: HUnit, base
+    hs-source-dirs: src
