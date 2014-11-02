@@ -5,9 +5,7 @@
 #include "regex.h"
 
 enum NodeType {
-    NodeType_Verbatim,
-    NodeType_Start,
-    NodeType_End
+    NodeType_Verbatim, NodeType_Start, NodeType_End
 };
 
 struct Node {
@@ -16,7 +14,26 @@ struct Node {
 
     // The alternative continuation from this node
     Node* branch;
+};
+
+Node StartNode() {
+    Node n;
+    n.type = NodeType_Start;
+    return n;
 }
+
+Node EndNode() {
+    Node n;
+    n.type = NodeType_End;
+    return n;
+}
+
+Node VerbatimNode() {
+    Node n;
+    n.type = NodeType_End;
+    return n;
+}
+
 
 typedef std::vector<Node> node_list;
 typedef std::vector<int> node_ix_list;
@@ -32,13 +49,13 @@ static void make_branch(Node& branch_point, Node* new_branch) {
 
 static void connect_forward_branch_points(node_list& nodes, node_ix_list& forward_branch_points) {
     node_list::iterator node_it = nodes.begin();
-    for(node_ptr_list::const_iterator it = forward_branch_points.begin(); it != forward_branch_points.end(); it++) {
+    for(node_ix_list::const_iterator it = forward_branch_points.begin(); it != forward_branch_points.end(); it++) {
         Node& n = nodes.at(*it); 
         
         if(std::distance(node_it, nodes.end()) >= 2) {
-            make_branch(n, it + 2);
+            make_branch(n, &nodes.at(*it + 2));
         } else {
-            make_branch(n, &nodes.back);
+            make_branch(n, &nodes.back());
         }
     }
 }
@@ -55,12 +72,13 @@ node_list compile(const std::string& input) {
             forward_branch_points.push_back(std::distance(it, input.begin()));
         }
         nodes.push_back(VerbatimNode());
-        nodes.back.c = c;
+        nodes.back().c = c;
         if('+' == c || '*' == c) {
-            make_branch(nodes.back.branch, &nodes.back.branch);
+            // Create a loop back to itself (to match an arbitrary number of copies)
+            make_branch(nodes.back(), &nodes.back());
         }
         else {
-            nodes.back.branch = 0;
+            nodes.back().branch = 0;
         }
     }
     nodes.push_back(EndNode());
